@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-class SwitchLang_Widget extends StatefulWidget {
-  const SwitchLang_Widget({Key? key}) : super(key: key);
+class LangToggle_Widget extends StatefulWidget {
+  const LangToggle_Widget({Key? key}) : super(key: key);
 
   @override
-  _SwitchLang_WidgetState createState() => _SwitchLang_WidgetState();
+  _LangToggle_WidgetState createState() => _LangToggle_WidgetState();
 }
 
-class _SwitchLang_WidgetState extends State<SwitchLang_Widget> {
+class _LangToggle_WidgetState extends State<LangToggle_Widget> {
   final String _temporaryPassword = '1234'; // Temporary password
   bool _isEnglishSelected = true;
 

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:test_drive/Modules/CommBoard/SymbolPlayer_Widget.dart';
 import 'package:test_drive/Modules/CommBoard/CategoriesTiles_Widget.dart';
 
@@ -24,10 +22,10 @@ class CommBoard_Mod extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
-                children: const [
+                children: [
                   // Add your widgets here
                   ListTile(
-                    //title: SymbolPlayer_Widget(),
+                    title: SymbolPlayer_Widget(),
                   ),
                   ListTile(
                     title: CategoriesTiles_Widget(),

@@ -1,66 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class SymbolPlayer_Widget extends StatefulWidget {
-  final String symbol;
-  final String word;
-
-  const SymbolPlayer_Widget({
-    Key? key,
-    required this.symbol,
-    required this.word,
-  }) : super(key: key);
+  const SymbolPlayer_Widget({Key? key}) : super(key: key);
 
   @override
-  _SymbolPlayerWidgetState createState() => _SymbolPlayerWidgetState();
+  _SymbolPlayer_WidgetState createState() => _SymbolPlayer_WidgetState();
 }
 
-class _SymbolPlayerWidgetState extends State<SymbolPlayer_Widget> {
-  List<Map<String, String>> selectedSymbols = [];
+class _SymbolPlayer_WidgetState extends State<SymbolPlayer_Widget> {
+  List<Map<String, String>> selectedSymbols = [
+    {'symbol': '🐱', 'word': 'cat'},
+    {'symbol': '🐶', 'word': 'dog'},
+    {'symbol': '🐀', 'word': 'rat'},
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      height: 100,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.play_arrow),
+            padding: EdgeInsets.only(right: 40, left: 20),
+            iconSize: 60,
+            onPressed: () {
+              // Play the selected symbols
+              _playSymbols(selectedSymbols);
+            },
+          ),
+          Expanded(
+            child: Container(
+              height: 90, // Set a fixed height for the symbols container
               child: ListView.builder(
+                scrollDirection: Axis.horizontal,
                 itemCount: selectedSymbols.length,
                 itemBuilder: (context, index) {
-                  final symbol = selectedSymbols[index]['symbol'];
-                  final word = selectedSymbols[index]['word'];
-
-                  return ListTile(
-                    title: Text(word!),
-                    leading: Icon(_getIconData(symbol!)),
-                    onTap: () {
-                      setState(() {
-                        selectedSymbols.removeAt(index);
-                      });
-                    },
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    margin: EdgeInsets.only(right: 20),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          selectedSymbols[index]['symbol']!,
+                          style: TextStyle(fontSize: 35), // Font size for the symbol
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          selectedSymbols[index]['word']!,
+                          style: TextStyle(fontSize: 16), // Font size for the word
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
             ),
-          ],
-        ),
+          ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            padding: EdgeInsets.only(left: 40, right: 20),
+            iconSize: 50,
+            onPressed: () {
+              // Delete all selected symbols
+              setState(() {
+                selectedSymbols.clear();
+              });
+            },
+          ),
+        ],
       ),
     );
   }
 
-  IconData _getIconData(String symbol) {
-    switch (symbol) {
-      case 'home':
-        return Icons.home;
-      case 'school':
-        return Icons.school;
-      case 'kitchen':
-        return Icons.kitchen;
-      // Add more cases as needed
-      default:
-        return Icons.error;
-    }
+  void _playSymbols(List<Map<String, String>> symbols) {
+    // Implement logic to play the selected symbols
+    print('Playing symbols: $symbols');
   }
 }

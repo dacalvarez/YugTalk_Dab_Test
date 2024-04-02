@@ -14,7 +14,6 @@ void main() {
         builder: DevicePreview.appBuilder,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          //primaryColor: const Color.fromARGB(0, 232, 194, 33),
           useMaterial3: false,
         ),
         useInheritedMediaQuery: true, // keep this for device_preview to work
