@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:test_drive/Modules/PopupForm/PopupForm_Mod.dart';
 import 'package:tab_container/tab_container.dart';
 
 class CategoriesTiles_Widget extends StatelessWidget {
-  CategoriesTiles_Widget({Key? key}) : super(key: key);
+  final Function(Map<String, String>) onSymbolSelected;
+
+  CategoriesTiles_Widget({Key? key, required this.onSymbolSelected}) : super(key: key);
 
   final List<List<Map<String, String>>> categoryData = [
     [
@@ -44,10 +45,9 @@ class CategoriesTiles_Widget extends StatelessWidget {
               itemBuilder: (context, itemIndex) {
                 Map<String, String> data = categoryData[index][itemIndex];
                 return GestureDetector(
-                  onTap: () {
-                    // Handle tile selection
-                  },
-                  onLongPressStart: (LongPressStartDetails details) {
+                  onTap: () => onSymbolSelected(data),
+                  onLongPress: () {
+                    // Introduce a delay of 1 second before showing the dialog
                     Future.delayed(Duration(seconds: 1), () {
                       showDialog(
                         context: context,
@@ -55,7 +55,7 @@ class CategoriesTiles_Widget extends StatelessWidget {
                           return PopupForm_Mod(
                             symbol: data['symbol']!,
                             word: data['word']!,
-                            audioUrl: data['audio']!,
+                            // Assuming you also need to pass the audio URL if required
                           );
                         },
                       );
@@ -68,10 +68,11 @@ class CategoriesTiles_Widget extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: IconButton(
-                            icon: Icon(Icons.spatial_audio),
+                            icon: Icon(Icons.volume_up),
                             iconSize: 50,
                             onPressed: () {
-                              // Play audio associated with the symbol
+                              // Ideally, this would play the audio associated with the symbol
+                              // This requires further implementation detail
                             },
                           ),
                         ),
@@ -79,14 +80,8 @@ class CategoriesTiles_Widget extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                data['symbol']!,
-                                style: TextStyle(fontSize: 24),
-                              ),
-                              Text(
-                                data['word']!,
-                                style: TextStyle(fontSize: 18),
-                              ),
+                              Text(data['symbol']!, style: TextStyle(fontSize: 24)),
+                              Text(data['word']!, style: TextStyle(fontSize: 18)),
                             ],
                           ),
                         ),
@@ -98,7 +93,7 @@ class CategoriesTiles_Widget extends StatelessWidget {
             ),
           ),
         ),
-        tabs: ['Category 1', 'Category 2', 'Category 3'],
+        tabs: ['Category 1', 'Category 2', 'Category 3'], // Adjust number of tabs as needed
       ),
     );
   }
