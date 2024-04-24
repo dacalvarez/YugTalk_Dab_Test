@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 class ExploreToggle_Widget extends StatefulWidget {
-  const ExploreToggle_Widget({Key? key}) : super(key: key);
+  final bool isEditMode;  // Flag to determine if it's in edit mode
+
+  const ExploreToggle_Widget({Key? key, required this.isEditMode}) : super(key: key);
 
   @override
   _ExploreToggle_WidgetState createState() => _ExploreToggle_WidgetState();
@@ -30,7 +32,13 @@ class _ExploreToggle_WidgetState extends State<ExploreToggle_Widget> {
       activeColor: Colors.amber,
       inactiveColor: Colors.red,
       onToggle: (val) {
-        _showPasswordDialog(context, val);
+        if (widget.isEditMode) {
+          // If in edit mode, toggle without asking for password
+          _toggleExplore();
+        } else {
+          // If not in edit mode, prompt for password
+          _showPasswordDialog(context, val);
+        }
       },
     );
   }
@@ -42,42 +50,38 @@ class _ExploreToggle_WidgetState extends State<ExploreToggle_Widget> {
   }
 
   void _showPasswordDialog(BuildContext context, bool val) {
-  if (_isSelected != val) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        String enteredPassword = ''; // Declare enteredPassword variable
-
-        return AlertDialog(
-          title: const Text('Enter Password'),
-          content: TextField(
-            obscureText: true,
-            decoration: InputDecoration(hintText: 'Password'),
-            onChanged: (value) {
-              // Update enteredPassword when the TextField changes
-              enteredPassword = value;
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Implement password validation here
-                if (enteredPassword == _temporaryPassword) {
-                  // Password is correct
-                  _toggleExplore();
-                  Navigator.of(context).pop(); // Close the dialog
-                } else {
-                  print('Wrong password');
-                }
-              },
-              child: const Text('Submit'),
+    if (_isSelected != val) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          TextEditingController passwordController = TextEditingController();
+          return AlertDialog(
+            title: const Text('Want To Explore?'),
+            content: TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(hintText: 'Enter Password'),
             ),
-          ],
-        );
-      },
-    );
-  } else {
-    _toggleExplore();
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  if (passwordController.text == _temporaryPassword) {
+                    Navigator.of(context).pop(); // Close the dialog
+                    _toggleExplore(); // Toggle the switch after successful password entry
+                  } else {
+                    // Optionally, handle wrong password case
+                    Navigator.of(context).pop(); // Consider closing the dialog or prompting again
+                    print('Wrong password'); // Or provide user feedback within the dialog
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      _toggleExplore(); // This else branch may be redundant based on your needs
+    }
   }
-}
 }

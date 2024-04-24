@@ -15,9 +15,7 @@ class _ChildLock_WidgetState extends State<ChildLock_Widget> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        _incrementTapCount();
-      },
+      onPressed: _incrementTapCount,
       icon: const Icon(
         Icons.lock,
         size: 40,
@@ -29,45 +27,60 @@ class _ChildLock_WidgetState extends State<ChildLock_Widget> {
     setState(() {
       _tapCount++;
       if (_tapCount == 3) {
+        _tapCount = 0; // Reset tap count after showing the dialog
         _showPasswordDialog(context);
       }
     });
   }
 
   void _showPasswordDialog(BuildContext context) {
+    TextEditingController _passwordController = TextEditingController();
+    bool _isPasswordWrong = false;
+
     showDialog(
       context: context,
+      barrierDismissible: false, // Prevent closing the dialog by tapping outside it
       builder: (BuildContext context) {
-        String enteredPassword = ''; // Declare enteredPassword variable
-
-        return AlertDialog(
-          title: const Text('Enter Password'),
-          content: TextField(
-            obscureText: true,
-            decoration: InputDecoration(hintText: 'Password'),
-            onChanged: (value) {
-              // Update enteredPassword when the TextField changes
-              enteredPassword = value;
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Implement password validation here
-                if (enteredPassword == _temporaryPassword) {
-                  // Password is correct
-                  Navigator.of(context).pop(); // Close the dialog
-                  Navigator.pushReplacement( // Replace the current route with the HomeScreen
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                } else {
-                  print('Wrong password');
-                }
-              },
-              child: const Text('Submit'),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Leaving Me Mode?'),
+              content: TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter Password',
+                  errorText: _isPasswordWrong ? 'Wrong password, try again' : null,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_passwordController.text == _temporaryPassword) {
+                      // Password is correct
+                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.pushReplacement( // Navigate to HomeScreen
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      );
+                    } else {
+                      setState(() {
+                        _isPasswordWrong = true; // Show error message in dialog
+                        _passwordController.clear(); // Clear the text field for retry
+                      });
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

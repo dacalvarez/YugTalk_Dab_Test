@@ -20,9 +20,9 @@ class _MyWidgetState extends State<MeMode> {
         centerTitle: true,
         leading: ChildLock_Widget(),
         actions: [
-          ExploreToggle_Widget(),
+          ExploreToggle_Widget(isEditMode: false),
           Padding(padding: EdgeInsets.only(left: 10)),
-          LangToggle_Widget(),
+          LangToggle_Widget(isEditMode: false),
           Padding(padding: EdgeInsets.only(left: 10)),
         ],
       ),
